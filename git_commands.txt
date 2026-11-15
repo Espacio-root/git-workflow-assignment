@@ -1,0 +1,162 @@
+Git commands used in this assignment
+Name    : Abdullah Danish
+Roll No : 2024eb02166
+Repo    : https://github.com/Espacio-root/git-workflow-assignment
+=====================================================================
+
+STEP 1 - LOCAL REPOSITORY SETUP
+---------------------------------------------------------------------
+mkdir git-workflow-assignment
+    Makes the project folder.
+
+cd git-workflow-assignment
+    Goes into the project folder.
+
+ls -l
+    Lists the files, to check index.html and about.html are there.
+
+git init -b main
+    Turns the folder into a Git repository (creates the .git folder) and
+    names the first branch "main".
+
+git status
+    Shows which files are new, changed or staged.
+
+
+STEP 2 - COMMITS, BRANCHING AND MERGING
+---------------------------------------------------------------------
+git add index.html about.html
+    Stages both HTML files so they go into the next commit.
+
+git commit -m "Initial commit: add index.html and about.html"
+    Saves the starting state of the project as the first commit.
+
+git status --short
+    Short version of git status. " M" means the file was modified.
+
+git diff
+    Shows exactly which lines changed since the last commit.
+
+git add about.html
+    Stages the edited about.html.
+
+git commit -m "Update about.html with author details and purpose"
+    Second commit, with the change to about.html.
+
+git branch feature
+    Creates a new branch called "feature".
+
+git checkout feature
+    Switches to the feature branch. (git switch feature does the same.)
+
+git branch
+    Lists the branches. The * shows which one I'm on.
+
+git add index.html
+    Stages the change I made to index.html on the feature branch.
+
+git commit -m "Add features section to index.html (feature branch)"
+    Commits that change on feature only. main doesn't have it yet.
+
+git checkout main
+    Goes back to the main branch.
+
+git merge --no-ff feature -m "Merge branch 'feature' into main"
+    Brings the feature branch's changes into main. --no-ff makes Git
+    create a merge commit, so the branch still shows up in the history.
+
+git log --oneline --graph --all --decorate
+    Shows all commits on all branches as a small graph, one line each.
+
+git log --stat
+    Shows the full log with author, date, message and changed files.
+
+
+STEP 3 - .gitignore
+---------------------------------------------------------------------
+echo "..." > app.log ; echo "..." > debug.log ; mkdir temp
+    Normal shell commands. They make some test files so I can check
+    that .gitignore really ignores them.
+
+cat .gitignore
+    Prints the .gitignore file. "*.log" ignores every .log file and
+    "temp/" ignores the whole temp folder.
+
+git status
+    After adding .gitignore, the log files and temp/ no longer show up.
+
+git check-ignore -v app.log debug.log temp/notes.txt
+    Tells me which line in .gitignore is ignoring each file.
+
+git add .gitignore
+    Stages the .gitignore file.
+
+git commit -m "Add .gitignore to ignore *.log files and temp/ folder"
+    Commits it so the rules are saved in the repo.
+
+git status --ignored
+    Lists the files Git is ignoring right now.
+
+
+STEP 4 - UNDOING A COMMIT
+---------------------------------------------------------------------
+git add contact.html
+    Stages a new page for the extra commit.
+
+git commit -m "Add contact page"
+    The extra commit that I then undo.
+
+git log --oneline -3
+    Shows the last 3 commits, to check "Add contact page" is the latest.
+
+git revert --no-edit HEAD
+    Undoes the last commit by making a new commit that reverses it, so
+    contact.html is removed. The old commit stays in the history, which
+    makes this safe for a repo that's on GitHub. --no-edit just keeps
+    the default commit message.
+
+git log --oneline --graph --decorate
+    Shows the history after the undo. Both the original commit and the
+    "Revert" commit are there.
+
+ls  /  git status
+    Shows that contact.html is gone and nothing is left to commit.
+
+git show --stat HEAD
+    Shows what the revert commit did (it deleted contact.html).
+
+Not used: git reset --soft HEAD~1  /  git reset --hard HEAD~1
+    These move the branch back one commit and drop it from history
+    (--soft keeps the changes staged, --hard throws them away). Not a
+    good idea after pushing, because it rewrites history.
+
+
+STEP 5 - PUSHING TO GITHUB
+---------------------------------------------------------------------
+(Before this I made an empty public repo called git-workflow-assignment
+ on github.com, with no README, .gitignore or licence.)
+
+git add git_commands.txt
+    Stages this file.
+
+git commit -m "Add git_commands.txt documenting all commands used"
+    Commits this file.
+
+git remote add origin https://github.com/Espacio-root/git-workflow-assignment.git
+    Links my local repo to the GitHub repo and calls it "origin".
+
+git remote -v
+    Shows the remote URL, to check it's right.
+
+git push -u origin main
+    Uploads main and all its history to GitHub. -u remembers origin/main
+    so next time a plain "git push" is enough.
+
+git push origin feature
+    Uploads the feature branch too.
+
+git branch -a
+    Lists local and remote branches, to check both were pushed.
+
+git log --oneline --graph --all --decorate
+    Final history with the merge, the revert and the remote branches.
